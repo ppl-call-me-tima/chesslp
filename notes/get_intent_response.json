@@ -1,0 +1,16 @@
+[
+    {
+        "intent": "make_move",
+        "move": {
+            "piece?": "pawn",
+            "file": "e",
+            "rank": 4
+        }
+    },
+    {
+        "intent": "position_status"
+    },
+    {
+        "intent": "best_move"
+    }
+]

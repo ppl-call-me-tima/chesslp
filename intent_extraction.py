@@ -5,11 +5,44 @@ nlp = spacy.load("en_core_web_sm")
 matcher = Matcher(nlp.vocab)
 
 # pattern defintion
-move_pattern = [
-        [{"LOWER": "play"}, {"LOWER": "the"}, {"LOWER": "move"}],
-        [{"LOWER": "make"}, {"LOWER": "the"}, {"LOWER": "move"}],
+# move
+piece_pattern = [
+    [{"LOWER": "pawn"}],
+    [{"LOWER": "knight"}],
+    [{"LOWER": "bishop"}],
+    [{"LOWER": "rook"}],
+    [{"LOWER": "queen"}],
+    [{"LOWER": "king"}],
 ]
 
+phonetic_pattern = [
+    [{"LOWER": "alpha"}],
+    [{"LOWER": "bravo"}],
+    [{"LOWER": "charlie"}],
+    [{"LOWER": "delta"}],
+    [{"LOWER": "echo"}],
+    [{"LOWER": "foxtrot"}],
+    [{"LOWER": "golf"}],
+    [{"LOWER": "hotel"}],
+]
+
+number_pattern = [
+    [{"LOWER": "one"}],
+    [{"LOWER": "two"}],
+    [{"LOWER": "three"}],
+    [{"LOWER": "four"}],
+    [{"LOWER": "five"}],
+    [{"LOWER": "six"}],
+    [{"LOWER": "seven"}],
+    [{"LOWER": "eight"}],
+]
+
+move_pattern = [
+    [{"LOWER": "play"}, {"LOWER": "the"}, {"LOWER": "move"}],
+    [{"LOWER": "make"}, {"LOWER": "the"}, {"LOWER": "move"}],
+]
+
+# status
 status_pattern = [
     [{"LOWER": "winning"}],
     [{"LOWER": "points"}],
@@ -17,33 +50,40 @@ status_pattern = [
     [{"LOWER": "position"}, {"LOWER": "status"}]
 ]
 
+# best_move
 best_move_pattern = [
     [{"LOWER": "best"}, {"LOWER": "move"}],
     [{"LOWER": "recommend"}, {"LOWER": "a"}, {"LOWER": "move"}]
 ]
 
+matcher.add("piece", piece_pattern)
+matcher.add("phonetic", phonetic_pattern)
+matcher.add("number", number_pattern)
 matcher.add("make_move", move_pattern)
 matcher.add("position_status", status_pattern)
 matcher.add("best_move", best_move_pattern)
 
 
 # matching
-text = "Recommend a move to me"
-
 def get_intent(text):
     doc = nlp(text)
     matches = matcher(doc)
-    
-    intent = None
-    
+
+    intents = []
+
     if matches:
         for match_id, start, end in matches:
 
             intent = nlp.vocab.strings[match_id]
-            matched_span = doc[start:end]
-            
+            content = doc[start:end]
+
+            intents.append({
+                "intent": intent,
+                "content": content,
+            })
+
             # print(f"For the text '{text}':")
             # print(f"  - Matched span: '{matched_span.text}'")
             # print(f"  - Detected Intent: '{intent}'")
 
-    return intent
+    return intents
