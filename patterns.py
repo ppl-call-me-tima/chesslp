@@ -9,6 +9,10 @@ piece_pattern = [
     [{"LOWER": "king"}],
 ]
 
+alg_pattern = [
+    [{"TEXT": {"REGEX": r"^[a-zA-Z][1-8]$"}}],
+]
+
 phonetic_pattern = [
     [{"LOWER": "alpha"}],
     [{"LOWER": "bravo"}],

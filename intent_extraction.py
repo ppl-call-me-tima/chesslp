@@ -8,6 +8,7 @@ nlp = spacy.load("en_core_web_sm")
 matcher = Matcher(nlp.vocab)
 
 matcher.add("piece", piece_pattern)
+matcher.add("algebraic", alg_pattern)
 matcher.add("phonetic", phonetic_pattern)
 matcher.add("number", number_pattern)
 
@@ -28,7 +29,7 @@ def get_intent(text):
         for match_id, start, end in matches:
 
             match_type = nlp.vocab.strings[match_id]
-            content = str(doc[start:end])
+            content = str(doc[start:end]).lower()
 
             if match_type in types_of_intents:
                 intentObj["intent"] = match_type
@@ -38,9 +39,15 @@ def get_intent(text):
                 
                 if match_type == "piece":
                     intentObj["move"]["piece"] = content
+                elif match_type == "algebraic":
+                    intentObj["move"].update(get_file_and_rank_from_algebraic(content))
                 elif match_type == "phonetic":
-                    intentObj["move"]["file"] = get_file_from_phonetic(content)
+                    intentObj["move"].update(get_file_from_phonetic(content))
                 elif match_type == "number":
-                    intentObj["move"]["rank"] = get_rank_from_number(content)
+                    intentObj["move"].update({"rank": get_rank_value_from_number(content)})
+
+    if intentObj["intent"] == "make_move":
+        if "piece" not in intentObj["move"]:
+            intentObj["move"].update({"piece": "pawn"})
 
     return intentObj
