@@ -36,7 +36,7 @@ number_pattern = [
 ]
 
 move_pattern = [
-    [{"LOWER": "play"}, {"LOWER": "the"}, {"LOWER": "move"}],
+    [{"LOWER": "play"}],
     [{"LOWER": "make"}, {"LOWER": "the"}, {"LOWER": "move"}],
 ]
 

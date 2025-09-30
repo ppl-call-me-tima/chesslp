@@ -25,29 +25,34 @@ def get_intent(text):
 
     intentObj = {}
 
-    if matches:
-        for match_id, start, end in matches:
+    try:
+        if matches:
+            for match_id, start, end in matches:
 
-            match_type = nlp.vocab.strings[match_id]
-            content = str(doc[start:end]).lower()
+                match_type = nlp.vocab.strings[match_id]
+                content = str(doc[start:end]).lower()
 
-            if match_type in types_of_intents:
-                intentObj["intent"] = match_type
-            else:
-                if "move" not in intentObj:
-                    intentObj["move"] = {}
-                
-                if match_type == "piece":
-                    intentObj["move"]["piece"] = content
-                elif match_type == "algebraic":
-                    intentObj["move"].update(get_file_and_rank_from_algebraic(content))
-                elif match_type == "phonetic":
-                    intentObj["move"].update(get_file_from_phonetic(content))
-                elif match_type == "number":
-                    intentObj["move"].update({"rank": get_rank_value_from_number(content)})
+                if match_type in types_of_intents:
+                    intentObj["intent"] = match_type
+                else:
+                    if "move" not in intentObj:
+                        intentObj["move"] = {}
+                    
+                    if match_type == "piece":
+                        intentObj["move"]["piece"] = content
+                    elif match_type == "algebraic":
+                        intentObj["move"].update(get_file_and_rank_from_algebraic(content))
+                    elif match_type == "phonetic":
+                        intentObj["move"].update(get_file_from_phonetic(content))
+                    elif match_type == "number":
+                        intentObj["move"].update({"rank": get_rank_value_from_number(content)})
 
-    if intentObj["intent"] == "make_move":
-        if "piece" not in intentObj["move"]:
-            intentObj["move"].update({"piece": "pawn"})
+        if intentObj["intent"] == "make_move":
+            if "piece" not in intentObj["move"]:
+                intentObj["move"].update({"piece": "pawn"})
+    
+    except KeyError:
+        intentObj.clear()
+        intentObj["error"] = "patterns are cross-interfering"
 
     return intentObj
