@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from intent.intent_extraction import get_intent
+from Chess import *
 
 app = FastAPI()
+board = Chess()
 
 origins = [
     "http://localhost:5173",
@@ -27,5 +29,9 @@ def root():
 
 @app.post("/api/input")
 def input(input: Input):
-    print(f"input request received at api: {input.input}")
-    return get_intent(input.input)
+    intent =  get_intent(input.input)
+
+    if intent["intent"] == "make_move":
+        fen = board.make_move(intent["move"])
+    
+    return fen
