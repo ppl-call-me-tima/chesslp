@@ -22,12 +22,14 @@ export default function MoveMaker({ setFen }) {
 
     fetch("http://127.0.0.1:8000/api/input", options)
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => setFen(data))
+    
+    setInput("")
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <input onChange={handleChange} />
+      <input value={input} onChange={handleChange} />
       <button>Submit</button>
     </form>
   )
