@@ -1,8 +1,8 @@
 import spacy
 from spacy.matcher import Matcher
 
-from patterns import *
-from helpers import *
+from .patterns import *
+from .helpers import *
 
 nlp = spacy.load("en_core_web_sm")
 matcher = Matcher(nlp.vocab)

@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from intent.intent_extraction import get_intent
+
 app = FastAPI()
 
 origins = [
@@ -25,4 +27,5 @@ def root():
 
 @app.post("/api/input")
 def input(input: Input):
-    return f"input request received at api: {input.input}"
+    print(f"input request received at api: {input.input}")
+    return get_intent(input.input)
