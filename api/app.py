@@ -31,7 +31,12 @@ def root():
 def input(input: Input):
     intent =  get_intent(input.input)
 
-    if intent["intent"] == "make_move":
-        fen = board.make_move(intent["move"])
+    if "intent" not in intent:
+        print("No intent specified")
+    else:
+        if intent["intent"] == "make_move":
+            board.make_move(intent["move"])
+        else:
+            print(intent)
     
-    return fen
+    return board.get_fen()

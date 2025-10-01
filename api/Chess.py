@@ -4,6 +4,9 @@ class Chess:
     def __init__(self):
         self.board = Board()
     
+    def get_fen(self):
+        return self.board.fen()
+    
     def make_move(self, intent_move):
         move = self.get_move(intent_move)
         
